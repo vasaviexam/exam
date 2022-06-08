@@ -1,44 +1,36 @@
-###Week-7    --  44 lines
+###Week-7    --  36 lines
 
-n = int(input().strip())
+def isSafe(row, col, n, board):
+    j = 1
+    while row-j>-1 and col-j>-1:
+        if board[row-j][col-j]=='Q':
+            return False
+        j += 1
+    j = 1
+    while row+j<n and col-j>-1:
+        if board[row+j][col-j]=='Q':
+            return False
+        j += 1
+    return True
 
-board = [[0 for j in range(n+1)] for k in range(n)]
-
-def attack(n,row,col,board):
-    for j in range(1,n+1):
-        if j==col:
+def n_queens(vis, col, n, board):
+    if col==n:
+        return board
+    for row in range(n):
+        if vis[row]==1:
             continue
-        if board[row][j]==1:
-            return True
-    r,c = row-1, col+1
-    while r>=0 and c<n+1:
-        if board[r][c]==1:
-            return True
-        r-=1
-        c+=1
-    r,c = row+1, col+1
-    while r<n and c<n+1:
-        if board[r][c]==1:
-            return True
-        r+=1
-        c+=1
-    return False
+        vis[row] = 1
+        board[row][col]='Q'
+        if isSafe(row, col, n, board):
+            res = n_queens(vis, col+1, n, board)
+            if res!=[]: return res
+        board[row][col]='_'
+        vis[row]=0
+    return []
 
-def n_queens(board,n,col):
-    if col==0:
-        return True
-    for k in range(n):
-        board[k][col]=1
-        if attack(n,k,col,board):
-            board[k][col]=0
-            continue
-        if n_queens(board,n,col-1):
-            return True
-        else:
-            board[k][col]=0
-    return False
 
-n_queens(board,n,n)
-
-for row in board:
-    print(row[1:])
+n = int(input("Enter n : "))
+board = [['_' for k in range(n)] for j in range(n)]
+board = n_queens([0]*n, 0, n, board)
+for row in  board:
+    print(row)
