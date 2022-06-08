@@ -1,0 +1,32 @@
+### Alpha Beta Shorter Version   -- 32 lines
+plys = ['Max', 'Min']
+fns = [max,min]
+
+def alphabetapruning(alpha, beta, p, tree, node):
+    if isinstance(node,int):
+        print('Visited node ',node)
+        return node
+    global plys, fns
+    ab = [alpha, beta]
+    for c in range(len(tree[node])):
+        child = tree[node][c]
+        ab[p] = fns[p](ab[p],alphabetapruning(ab[0],ab[1],-p+1,tree,child))
+        if ab[1]<=ab[0] and tree[node][c+1:]!=[]:
+            print('Pruning : ',tree[node][c+1:])
+            break
+    ans = ab[p]
+    player = plys[p]
+    print('Visited node '+node+' as '+player+' and returning ',ans," ", (ab[0], ab[1]))
+    return ans
+
+tree = {
+    'A' : ['B','C'],
+    'B' : ['D','E'],
+    'C' : ['F','G'],
+    'D' : [3,5],
+    'E' : [6,9],
+    'F' : [1,2],
+    'G' : [0,-1]
+}
+
+alphabetapruning(-float('inf'), float('inf'), 0, tree, 'A')
